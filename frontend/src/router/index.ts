@@ -1,13 +1,12 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import AuthView from '@/views/Auth/AuthView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
-  },
-  {
+    component: AuthView
+  }, {
     path: '/about',
     name: 'about',
     // route level code-splitting
