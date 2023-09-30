@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-text-field
+      v-model="phone"
       label="Phone"
       placeholder="+78005553535"
       type="text"
@@ -16,16 +17,24 @@
       counter
       @click:append="showPassword = !showPassword"
     />
-    <v-btn variant="flat" color="primary">Login</v-btn>
+    <v-btn
+      variant="flat"
+      color="primary"
+      @click="login"
+    >
+      Login
+    </v-btn>
   </div>
 </template>
 
 <script lang="ts">
+import Api from '@/api'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   data () {
     return {
+      phone: '',
       password: '',
       showPassword: false,
       rules: {
@@ -33,6 +42,12 @@ export default defineComponent({
         min: (value: string) => value.length >= 4 || 'Min 4 characters',
       },
     }
+  },
+  methods: {
+    login () {
+      Api.user.login(this.phone, this.password)
+        .then(() => this.$router.push('/'))
+    },
   }
 })
 </script>

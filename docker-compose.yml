@@ -43,7 +43,8 @@ services:
         hostname: vue.local
         volumes:
             - './frontend:/frontend'
-        command: sh -c "npm ci && npm run serve"
+        command: sh -c "npm run serve"
+        # command: sh -c "npm ci && npm run serve"
         working_dir: /frontend
 
     mysql:

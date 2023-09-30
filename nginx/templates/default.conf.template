@@ -2,7 +2,7 @@ upstream laravel {
     server laravel.local:80;
 }
 upstream vue {
-    server vue.local:8080;
+    server vue.local:80;
 }
 
 server {
