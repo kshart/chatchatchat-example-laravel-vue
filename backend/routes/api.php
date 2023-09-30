@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TodoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,10 +16,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::get('/', function (Request $request) {
-    return 'hello';
+Route::prefix('api')->group(function () {
+    Route::prefix('user')->group(function () {
+        Route::post('create', [UserController::class, 'create']);
+        Route::post('login', [UserController::class, 'login']);
+        Route::get('me', [UserController::class, 'me'])->middleware('auth');
+        Route::get('meSessions', [UserController::class, 'meSessions'])->middleware('auth');
+        Route::post('logout', [UserController::class, 'logout'])->middleware('auth');
+        Route::get('index', [UserController::class, 'index'])->middleware('auth');
+    });
+    Route::prefix('todo')
+        ->middleware('auth')
+        ->group(function () {
+            Route::post('create', [TodoController::class, 'create']);
+            Route::get('search', [TodoController::class, 'search']);
+            Route::put('{id}', [TodoController::class, 'update']);
+        });
 });
