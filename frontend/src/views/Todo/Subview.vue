@@ -13,24 +13,7 @@
           :key="todo.id"
           cols="12"
         >
-          <v-card>
-            <v-card-title>
-              {{ todo.title }}
-            </v-card-title>
-            <v-card-subtitle>
-              <v-chip-group>
-                <v-chip>{{ todo.stage }}</v-chip>
-              </v-chip-group>
-            </v-card-subtitle>
-            <v-card-item>
-              {{ todo.description }}
-            </v-card-item>
-            <v-card-actions>
-              <v-btn>Done</v-btn>
-              <v-btn>Work</v-btn>
-              <v-btn>Delete</v-btn>
-            </v-card-actions>
-          </v-card>
+          <ListView :todo="todo" />
         </v-col>
       </v-row>
       <v-layout v-if="$vuetify.display.mobile" justify-center>
@@ -40,7 +23,7 @@
           fullscreen
           transition="dialog-bottom-transition"
         >
-          <CreatorCard @close="showCreateTodo = false" />
+          <Creator @close="showCreateTodo = false" />
         </v-dialog>
       </v-layout>
       <v-layout v-else justify-center>
@@ -48,7 +31,7 @@
           v-model="showCreateTodo"
           width="500"
         >
-          <CreatorCard @close="showCreateTodo = false" />
+          <Creator @close="showCreateTodo = false" />
         </v-dialog>
       </v-layout>
     </v-container>
@@ -65,12 +48,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import CreatorCard from './CreatorCard.vue'
+import Creator from './Creator.vue'
+import ListView from './ListView.vue'
 
 export default defineComponent({
   name: 'Subview',
   components: {
-    CreatorCard,
+    Creator,
+    ListView,
   },
   data () {
     return {

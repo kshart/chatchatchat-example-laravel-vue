@@ -9,7 +9,7 @@
       <v-btn-toggle
         v-model="stage"
         color="secondary"
-        group
+        class="mb-4"
       >
         <v-btn value="new">
           New
@@ -19,12 +19,13 @@
         </v-btn>
       </v-btn-toggle>
       <v-textarea v-model="description" label="Description"/>
+      <v-checkbox v-model="isPrivate" label="Private" />
     </v-card-item>
     <v-card-actions>
       <v-list-item class="w-100">
         <template v-slot:append>
-          <v-btn @click="$emit('close')">Close</v-btn>
-          <v-btn color="primary" variant="elevated">Create</v-btn>
+          <v-btn size="large" @click="$emit('close')">Close</v-btn>
+          <v-btn size="large" color="primary" variant="elevated" @click="create">Create</v-btn>
         </template>
       </v-list-item>
     </v-card-actions>
@@ -33,15 +34,26 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Api from '@/api'
 
 export default defineComponent({
-  name: 'CreatorCard',
   data () {
     return {
       title: '',
       description: '',
       stage: 'new',
+      isPrivate: false,
     }
   },
+  methods: {
+    create () {
+      // Api.todo.create({
+      //   title: this.title,
+      //   description: this.description,
+      //   stage: this.stage,
+      //   is_private: this.isPrivate,
+      // })
+    }
+  }
 })
 </script>
