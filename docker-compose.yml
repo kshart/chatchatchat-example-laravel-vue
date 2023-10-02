@@ -38,6 +38,8 @@ services:
             - redis
     frontend:
         image: node:20
+        ports:
+            - '8888:8888'
         networks:
             - sail
         hostname: vue.local

@@ -13,7 +13,6 @@
           :key="todo.id"
           cols="12"
         >
-      <v-input v-model="searchFts"/>
           <v-card>
             <v-card-title>
               {{ todo.title }}
@@ -34,17 +33,48 @@
           </v-card>
         </v-col>
       </v-row>
+      <v-layout v-if="$vuetify.display.mobile" justify-center>
+        <v-dialog
+          v-model="showCreateTodo"
+          hide-overlay
+          fullscreen
+          transition="dialog-bottom-transition"
+        >
+          <CreatorCard @close="showCreateTodo = false" />
+        </v-dialog>
+      </v-layout>
+      <v-layout v-else justify-center>
+        <v-dialog
+          v-model="showCreateTodo"
+          width="500"
+        >
+          <CreatorCard @close="showCreateTodo = false" />
+        </v-dialog>
+      </v-layout>
     </v-container>
+    <v-layout-item model-value position="bottom" class="px-8 text-end" size="88">
+      <v-btn
+        size="x-large"
+        icon="mdi-plus"
+        color="primary"
+        @click="showCreateTodo = true"
+      />
+    </v-layout-item>
   </v-main>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import CreatorCard from './CreatorCard.vue'
 
 export default defineComponent({
-  name: 'TodoSubview',
+  name: 'Subview',
+  components: {
+    CreatorCard,
+  },
   data () {
     return {
+      showCreateTodo: false,
       todos: [
         {
           id: 1,
@@ -56,13 +86,13 @@ export default defineComponent({
           id: 2,
           title: 'Гигазадача v2.0',
           description: 'Описание задачи',
-          stage: 'in_progress',
+          stage: 'in_work',
           is_private: true
         }, {
           id: 3,
           title: 'Гигазадача v3.0',
           description: 'Описание задачи',
-          stage: 'in_progress',
+          stage: 'new',
           is_private: true
         }
       ],

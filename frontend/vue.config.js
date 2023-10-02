@@ -1,6 +1,14 @@
 const { defineConfig } = require('@vue/cli-service')
+const { VuetifyPlugin } = require('webpack-plugin-vuetify')
+
 module.exports = defineConfig({
   transpileDependencies: true,
+  parallel: true,
+  configureWebpack: {
+    plugins: [
+      new VuetifyPlugin(),
+    ],
+  },
   devServer: {
     host: null,
     port: 80,

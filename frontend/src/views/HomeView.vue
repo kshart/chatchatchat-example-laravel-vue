@@ -28,7 +28,7 @@
       </v-list>
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn block>
+          <v-btn block @click="logout">
             Logout
           </v-btn>
         </div>
@@ -39,12 +39,15 @@
 </template>
 
 <script lang="ts">
+import Api from '@/api'
+import { Me } from '@/api/user'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'HomeView',
   data () {
     return {
+      me: null as Me|null,
       drawer: null,
       links: [
         {
@@ -59,5 +62,13 @@ export default defineComponent({
       ],
     }
   },
+  methods: {
+    logout () {
+      Api.user.logout()
+        .finally(() => {
+          window.location.reload()
+        })
+    },
+  }
 })
 </script>

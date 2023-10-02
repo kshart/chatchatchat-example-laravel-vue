@@ -15,6 +15,20 @@ export interface Me {
   updated_at: string
 }
 
+const meInternal = (): Promise<Me> => {
+  return fetch('/api/user/me')
+    .then(response => {
+      if (!response.ok) {
+        return null
+      }
+      return response.json()
+    })
+    .catch(error => {
+      console.error(error)
+      return null
+    })
+}
+
 export default {
   create (fields: CreateUser) {
     return fetch('/api/user/create', {
@@ -36,17 +50,7 @@ export default {
       })
   },
   me (): Promise<Me> {
-    return fetch('/api/user/me')
-      .then(response => {
-        if (!response.ok) {
-          return null
-        }
-        return response.json()
-      })
-      .catch(error => {
-        console.error(error)
-        return null
-      })
+    return (window as any).meResolve as Promise<Me>
   },
   login (phone: string, password: string) {
     return fetch('/api/user/login', {
@@ -63,11 +67,28 @@ export default {
         if (!ok) {
           return null
         }
+        (window as any).meResolve = meInternal()
         return body
       })
       .catch(error => {
         console.error(error)
         return null
       })
-  }
+  },
+  logout (): Promise<boolean> {
+    return fetch('/api/user/logout', {
+      method: 'POST',
+    })
+      .then(({ ok }) => {
+        if (!ok) {
+          return false
+        }
+        (window as any).meResolve = new Promise((resolve) => resolve(false))
+        return true
+      })
+      .catch(error => {
+        console.error(error)
+        return false
+      })
+  },
 }
