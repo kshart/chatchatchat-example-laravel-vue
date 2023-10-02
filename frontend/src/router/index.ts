@@ -4,34 +4,53 @@ import {
   RouteRecordRaw
 } from 'vue-router'
 import Api from '@/api'
+import { Me } from '@/api/user'
+import Http404 from '@/views/Http404.vue'
+import HomeView from '@/views/HomeView.vue'
 import AuthView from '@/views/Auth/AuthView.vue'
+import TodoSubview from '@/views/TodoSubview.vue'
+import UserSubview from '@/views/UserSubview.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    component: HomeView,
+    redirect: {
+      name: 'todos'
+    },
+    children: [
+      {
+        name: 'users',
+        path: 'users',
+        component: UserSubview,
+      }, {
+        name: 'todos',
+        path: '/todos',
+        component: TodoSubview,
+      }
+    ],
   }, {
     path: '/login',
     name: 'login',
     component: AuthView
   }, {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    path: '/:catchAll(.*)',
+    component: Http404
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+let me: Me|null = null
 
 router.beforeEach(async to => {
-  const me = await Api.user.me()
+  if (!me) {
+    me = await Api.user.me()
+    console.log('request me')
+  }
   if (me) {
     if (to.name === 'login') {
       return { name: 'home' }

@@ -5,6 +5,16 @@ interface CreateUser {
   email?: string
 }
 
+export interface Me {
+  id: number
+  name: string
+  phone: string
+  email: string
+  email_verified_at: string
+  created_at: string
+  updated_at: string
+}
+
 export default {
   create (fields: CreateUser) {
     return fetch('/api/user/create', {
@@ -25,7 +35,7 @@ export default {
         return null
       })
   },
-  me () {
+  me (): Promise<Me> {
     return fetch('/api/user/me')
       .then(response => {
         if (!response.ok) {
