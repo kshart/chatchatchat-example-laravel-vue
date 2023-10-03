@@ -1,62 +1,97 @@
 <template>
-  <v-main>
-    <v-container class="py-8 px-6" fluid>
-      <v-table>
-        <thead>
-          <tr>
-            <th class="text-center">#</th>
-            <th class="text-left">Name</th>
-            <th class="text-left">Phone</th>
-            <th class="text-left">Created at</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="user in users" :key="user.id">
-            <td>#{{ user.id }}</td>
-            <td>{{ user.name }}</td>
-            <td>{{ user.phone }}</td>
-            <td>{{ user.created_at }}</td>
-            <td>
-              <v-btn-group>
-                <v-btn>set admin</v-btn>
-                <v-btn>delete</v-btn>
-              </v-btn-group>
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
-    </v-container>
-  </v-main>
+  <v-container class="py-8 px-6" fluid>
+    <VSkeletonLoader
+      :loading="loading"
+      height="240"
+      type="card, list-item"
+      class="w-100"
+    >
+      <VInfiniteScroll class="w-100 bg-grey-lighten-3" @load="load">
+        <v-card
+          v-for="user in users"
+          class="mb-5 bg-white"
+          :key="user.id"
+          :title="user.name"
+          :subtitle="`#${user.id}`"
+          variant="elevated"
+        >
+          <v-card-text>
+            <v-list-item
+              density="compact"
+              prepend-icon="mdi-phone"
+            >
+              <v-list-item-subtitle>{{ user.phone }}</v-list-item-subtitle>
+            </v-list-item>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn-group>
+              <v-btn>set admin</v-btn>
+              <v-btn>delete</v-btn>
+            </v-btn-group>
+          </v-card-actions>
+        </v-card>
+      </VInfiniteScroll>
+    </VSkeletonLoader>
+  </v-container>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Api from '@/api'
+import { User } from '@/api/user'
+import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
+import { VInfiniteScroll } from 'vuetify/labs/VInfiniteScroll'
 
 export default defineComponent({
   name: 'UserSubview',
+  components: {
+    VSkeletonLoader,
+    VInfiniteScroll,
+  },
   data () {
     return {
-      users: [
-        {
-          id: 1,
-          name: 'Артём',
-          phone: '1234',
-          email: null,
-          email_verified_at: null,
-          created_at: '2023-09-30T18:30:18.000000Z',
-          updated_at: '2023-09-30T18:30:18.000000Z'
-        }, {
-          id: 2,
-          name: 'Артём',
-          phone: '+79123940185',
-          email: null,
-          email_verified_at: null,
-          created_at: '2023-09-30T18:34:19.000000Z',
-          updated_at: '2023-09-30T18:34:19.000000Z'
-        }
-      ],
+      loading: true,
+      page: 1,
+      perPage: 20,
+      total: 0,
+      totalPages: 0,
+      users: [] as User[],
     }
   },
+  beforeMount () {
+    Api.user.index(this.page, this.perPage)
+      .then(paginator => {
+        this.page = paginator.page
+        this.total = paginator.total
+        this.totalPages = paginator.totalPages
+        this.users = paginator.data
+      })
+      .finally(() => {
+        this.loading = false
+      })
+  },
+  methods: {
+    async load ({ done = (status: string) => undefined }) {
+      if (this.page >= this.totalPages) {
+        return done('empty')
+      }
+      try {
+        const paginator = await Api.user.index(this.page + 1, this.perPage)
+        this.page = paginator.page
+        this.total = paginator.total
+        this.totalPages = paginator.totalPages
+        this.users = this.users.concat(paginator.data)
+        this.loading = false
+        if (paginator.page >= paginator.totalPages || paginator.data.length <= 0) {
+          done('empty')
+        } else {
+          done('ok')
+        }
+      } catch (error) {
+        console.error(error)
+        done('error')
+      }
+    }
+  }
 })
 </script>

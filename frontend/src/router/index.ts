@@ -10,7 +10,7 @@ import AuthView from '@/views/Auth/AuthView.vue'
 import TodoSubview from '@/views/Todo/Subview.vue'
 import UserSubview from '@/views/UserSubview.vue'
 
-const routes: Array<RouteRecordRaw> = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',

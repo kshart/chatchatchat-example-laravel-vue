@@ -1,3 +1,5 @@
+import { Paginator } from './types'
+
 interface CreateUser {
   name: string
   phone: string
@@ -6,6 +8,16 @@ interface CreateUser {
 }
 
 export interface Me {
+  id: number
+  name: string
+  phone: string
+  email: string
+  email_verified_at: string
+  created_at: string
+  updated_at: string
+}
+
+export interface User {
   id: number
   name: string
   phone: string
@@ -48,6 +60,10 @@ export default {
         console.error(error)
         return null
       })
+  },
+  index (page: number, perPage: number): Promise<Paginator<User>> {
+    return fetch(`/api/user/index?page=${page}&limit=${perPage}`)
+      .then(response => response.json())
   },
   me (): Promise<Me> {
     return (window as any).meResolve as Promise<Me>
