@@ -43,7 +43,6 @@ import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
 import { VInfiniteScroll } from 'vuetify/labs/VInfiniteScroll'
 
 export default defineComponent({
-  name: 'UserSubview',
   components: {
     VSkeletonLoader,
     VInfiniteScroll,

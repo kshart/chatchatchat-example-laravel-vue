@@ -34,14 +34,22 @@
       </v-dialog>
     </v-layout>
   </v-container>
-  <v-layout-item model-value position="bottom" class="px-8 text-end" size="88">
+  <div v-if="$vuetify.display.mobile" class="pr-3 bottom-btn">
+    <v-btn
+      size="large"
+      icon="mdi-plus"
+      color="primary"
+      @click="showCreateTodo = true"
+    />
+  </div>
+  <div v-else class="pr-5 bottom-btn">
     <v-btn
       size="x-large"
       icon="mdi-plus"
       color="primary"
       @click="showCreateTodo = true"
     />
-  </v-layout-item>
+  </div>
 </template>
 
 <script lang="ts">
@@ -50,7 +58,6 @@ import Creator from './Creator.vue'
 import ListView from './ListView.vue'
 
 export default defineComponent({
-  name: 'Subview',
   components: {
     Creator,
     ListView,
@@ -84,3 +91,13 @@ export default defineComponent({
   },
 })
 </script>
+
+<style scoped>
+.bottom-btn {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 1000;
+}
+</style>

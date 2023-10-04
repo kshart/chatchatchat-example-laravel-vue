@@ -5,16 +5,16 @@ import {
 } from 'vue-router'
 import Api from '@/api'
 import Http404 from '@/views/Http404.vue'
-import HomeView from '@/views/HomeView.vue'
-import AuthView from '@/views/Auth/AuthView.vue'
-import TodoSubview from '@/views/Todo/Subview.vue'
-import UserSubview from '@/views/UserSubview.vue'
+import Home from '@/views/Home.vue'
+import Auth from '@/views/auth/Auth.vue'
+import Todos from '@/views/todos/Todos.vue'
+import Users from '@/views/users/Users.vue'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
-    component: HomeView,
+    component: Home,
     redirect: {
       name: 'todos'
     },
@@ -22,17 +22,17 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'users',
         path: 'users',
-        component: UserSubview,
+        component: Users,
       }, {
         name: 'todos',
         path: '/todos',
-        component: TodoSubview,
+        component: Todos,
       }
     ],
   }, {
     path: '/login',
     name: 'login',
-    component: AuthView
+    component: Auth
   }, {
     path: '/:catchAll(.*)',
     component: Http404
