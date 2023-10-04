@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * Задача
  * Только владелец задачи может ее редактировать
  *
+ * @property int $id
  * @property string $stage Стадия выполнения задачи new|in_work|deleted
  * @property string $title Название задачи
  * @property string $description Описание Задачи

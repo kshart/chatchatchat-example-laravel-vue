@@ -5,7 +5,7 @@
       <v-chip>{{ todo.stage }}</v-chip>
     </v-card-title>
     <v-card-subtitle>
-      12.11.2023 Автор пупкин
+      12.11.2023 {{ todo.user ? todo.user.name : todo.author_id }}
     </v-card-subtitle>
     <v-card-item>
       {{ todo.description }}
@@ -20,12 +20,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import type { PropType } from 'vue'
 import Api from '@/api'
-// import { Todo } from '@/api/todo'
+import { Todo } from '@/api/todo'
 
 export default defineComponent({
   props: {
-    todo: Object,
+    todo: Object as PropType<Todo>,
   },
   methods: {
     create () {
@@ -33,7 +34,7 @@ export default defineComponent({
       //   title: this.title,
       //   description: this.description,
       //   stage: this.stage,
-      //   is_private: this.isPrivate,
+      //   isPrivate: this.isPrivate,
       // })
     }
   }

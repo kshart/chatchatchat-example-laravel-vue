@@ -54,6 +54,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Api from '@/api'
+import { Todo } from '@/api/todo'
+import { User } from '@/api/user'
 import Creator from './Creator.vue'
 import ListView from './ListView.vue'
 
@@ -65,30 +68,33 @@ export default defineComponent({
   data () {
     return {
       showCreateTodo: false,
-      todos: [
-        {
-          id: 1,
-          title: 'Гигазадача v1.0',
-          description: 'Описание задачи',
-          stage: 'deleted',
-          is_private: true
-        }, {
-          id: 2,
-          title: 'Гигазадача v2.0',
-          description: 'Описание задачи',
-          stage: 'in_work',
-          is_private: true
-        }, {
-          id: 3,
-          title: 'Гигазадача v3.0',
-          description: 'Описание задачи',
-          stage: 'new',
-          is_private: true
-        }
-      ],
+      loading: true,
+      page: 1,
+      perPage: 20,
+      total: 0,
+      totalPages: 0,
+      todos: [] as Todo[],
       searchFts: '',
     }
   },
+  beforeMount () {
+    Api.todo.search('', 1, 100)
+      .then(paginator => {
+        this.page = paginator.page
+        this.total = paginator.total
+        this.totalPages = paginator.totalPages
+        this.todos = paginator.data
+      })
+      .finally(() => {
+        this.loading = false
+      })
+  },
+  methods: {
+    load () {
+      Api.todo.search('', 1, 100)
+        .then(das => console.log(das))
+    }
+  }
 })
 </script>
 
