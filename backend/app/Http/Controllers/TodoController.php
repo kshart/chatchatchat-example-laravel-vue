@@ -26,7 +26,9 @@ class TodoController extends Controller
     {
         $paginator = Todo::simplePaginate((int) $request->limit)->toArray();
         $userIds = [];
-        foreach ($paginator['data'] as $todo) {
+        $meId = $request->user()->id;
+        foreach ($paginator['data'] as &$todo) {
+            $todo['can_edit'] = $todo['author_id'] === $meId;
             if (!in_array($todo['author_id'], $userIds)) {
                 $userIds[] = $todo['author_id'];
             }

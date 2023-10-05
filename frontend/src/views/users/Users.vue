@@ -1,38 +1,40 @@
 <template>
-  <v-container class="py-8 px-6" fluid>
-    <VSkeletonLoader
-      :loading="loading"
-      height="240"
-      type="card, list-item"
-      class="w-100"
-    >
-      <VInfiniteScroll class="w-100 bg-grey-lighten-3" @load="load">
-        <v-card
-          v-for="user in users"
-          class="mb-5 bg-white"
-          :key="user.id"
-          :title="user.name"
-          :subtitle="`#${user.id}`"
-          variant="elevated"
-        >
-          <v-card-text>
-            <v-list-item
-              density="compact"
-              prepend-icon="mdi-phone"
-            >
-              <v-list-item-subtitle>{{ user.phone }}</v-list-item-subtitle>
-            </v-list-item>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn-group>
-              <v-btn>set admin</v-btn>
-              <v-btn>delete</v-btn>
-            </v-btn-group>
-          </v-card-actions>
-        </v-card>
-      </VInfiniteScroll>
-    </VSkeletonLoader>
-  </v-container>
+  <v-main class="h-100 bg-grey-lighten-3" scrollable>
+    <v-container class="py-8 px-6" fluid>
+      <VSkeletonLoader
+        :loading="loading"
+        height="240"
+        type="card, list-item"
+        class="w-100"
+      >
+        <VInfiniteScroll class="w-100 bg-grey-lighten-3" @load="load">
+          <v-card
+            v-for="user in users"
+            class="mb-5 bg-white"
+            :key="user.id"
+            :title="user.name"
+            :subtitle="`#${user.id}`"
+            variant="elevated"
+          >
+            <v-card-text>
+              <v-list-item
+                density="compact"
+                prepend-icon="mdi-phone"
+              >
+                <v-list-item-subtitle>{{ user.phone }}</v-list-item-subtitle>
+              </v-list-item>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn-group>
+                <v-btn>set admin</v-btn>
+                <v-btn>delete</v-btn>
+              </v-btn-group>
+            </v-card-actions>
+          </v-card>
+        </VInfiniteScroll>
+      </VSkeletonLoader>
+    </v-container>
+  </v-main>
 </template>
 
 <script lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :loading="loading">
     <v-card-title>Create todo</v-card-title>
     <v-card-item>
       <v-form ref="form">
@@ -42,13 +42,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Api from '@/api'
+import { TodoStage } from '@/api/todo'
 
 export default defineComponent({
   data () {
     return {
+      loading: false,
       title: '',
       description: '',
-      stage: 'new',
+      stage: 'new' as TodoStage,
       isPrivate: false,
       titleRules: [(v: string) => !!v || 'Name is required'],
       descriptionRules: [(v: string) => !!v || 'Description is required'],
@@ -62,12 +64,16 @@ export default defineComponent({
       const { valid } = await (this.$refs.form as any).validate()
 
       if (valid) {
-        Api.todo.create({
+        this.loading = true
+        const model = await Api.todo.create({
           title: this.title,
           description: this.description,
           stage: this.stage,
           is_private: this.isPrivate,
         })
+        model.can_edit = true
+        this.loading = false
+        this.$emit('created', model)
       }
     },
   }

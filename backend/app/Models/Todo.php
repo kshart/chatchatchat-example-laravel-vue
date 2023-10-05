@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * Только владелец задачи может ее редактировать
  *
  * @property int $id
- * @property string $stage Стадия выполнения задачи new|in_work|deleted
+ * @property string $stage Стадия выполнения задачи new|in_work|done|deleted
  * @property string $title Название задачи
  * @property string $description Описание Задачи
  * @property bool $is_private Задачу видит только владелец

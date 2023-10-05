@@ -1,11 +1,19 @@
 import { Paginator } from './types'
 import { User } from './user'
 
+export type TodoStage = 'new'|'in_work'|'done'|'deleted'
+
 interface CreateTodo {
-  stage: string
+  stage: TodoStage
   title: string
   is_private: boolean
   description: string
+}
+
+interface UpdateTodo {
+  stage?: TodoStage
+  title?: string
+  description?: string
 }
 
 export interface Todo {
@@ -13,7 +21,7 @@ export interface Todo {
   /**
    * Стадия выполнения задачи
    */
-  stage: 'new'|'in_work'|'deleted'
+  stage: TodoStage
   /**
    * Название задачи
    */
@@ -32,6 +40,8 @@ export interface Todo {
   author_id: number
   created_at: string
   updated_at: string
+
+  can_edit: boolean
 }
 
 interface PaginatorTodo extends Paginator<Todo> {
@@ -50,11 +60,11 @@ export default {
       },
       body: JSON.stringify(fields)
     })
-      .then(({ ok, body }) => {
-        if (!ok) {
+      .then(response => {
+        if (!response.ok) {
           return null
         }
-        return body
+        return response.json()
       })
       .catch(error => {
         console.error(error)
@@ -64,15 +74,34 @@ export default {
   search (fts: string, page: number, perPage: number): Promise<Paginator<TodoWithUser>> {
     return fetch(`/api/todo/search?page=${page}&limit=${perPage}`)
       .then(response => response.json())
-      .then(paginator => {
+      .then((paginator: PaginatorTodo) => {
         const usersMap = new Map<number, User>()
         for (const user of paginator.users) {
           usersMap.set(user.id, user)
         }
         for (const todo of paginator.data) {
-          todo.user = usersMap.get(todo.author_id)
+          (todo as any).user = usersMap.get(todo.author_id)
         }
         return paginator
+      })
+  },
+  update (id: number, fields: UpdateTodo) {
+    return fetch(`/api/todo/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(fields)
+    })
+      .then(response => {
+        if (!response.ok) {
+          return null
+        }
+        return response.json()
+      })
+      .catch(error => {
+        console.error(error)
+        return null
       })
   },
 }
