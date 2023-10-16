@@ -61,6 +61,6 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        return User::simplePaginate((int) $request->limit);
+        return User::paginate((int) $request->limit);
     }
 }

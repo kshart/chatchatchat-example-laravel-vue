@@ -72,7 +72,7 @@ export default defineComponent({
       })
   },
   methods: {
-    async load ({ done = (status: string) => undefined }) {
+    async load ({ done = (status: 'ok' | 'empty' | 'loading' | 'error') => undefined }) {
       if (this.page >= this.totalPages) {
         return done('empty')
       }

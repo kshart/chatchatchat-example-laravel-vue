@@ -24,7 +24,10 @@ class TodoController extends Controller
 
     public function search(Request $request)
     {
-        $paginator = Todo::simplePaginate((int) $request->limit)->toArray();
+        $paginator = Todo::query()
+            ->when(!!$request->fts, fn($q) => $q->where('title', 'LIKE', "%{$request->fts}%"))
+            ->paginate((int) $request->limit)
+            ->toArray();
         $userIds = [];
         $meId = $request->user()->id;
         foreach ($paginator['data'] as &$todo) {

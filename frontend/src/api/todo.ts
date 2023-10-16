@@ -72,7 +72,7 @@ export default {
       })
   },
   search (fts: string, page: number, perPage: number): Promise<Paginator<TodoWithUser>> {
-    return fetch(`/api/todo/search?page=${page}&limit=${perPage}`)
+    return fetch(`/api/todo/search?fts=${encodeURIComponent(fts)}&page=${page}&limit=${perPage}`)
       .then(response => response.json())
       .then((paginator: PaginatorTodo) => {
         const usersMap = new Map<number, User>()
@@ -80,7 +80,7 @@ export default {
           usersMap.set(user.id, user)
         }
         for (const todo of paginator.data) {
-          (todo as any).user = usersMap.get(todo.author_id)
+          (todo as TodoWithUser).user = usersMap.get(todo.author_id)
         }
         return paginator
       })
